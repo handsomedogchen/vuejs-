@@ -1,0 +1,86 @@
+﻿webpack4.0 进行后台数据模拟
+
+找到webpack-dev-conf.js
+1.const portfinder = require('portfinder')后面添加
+const express = require('express')
+const app = express()//请求server
+const appData = require('../data.json')//加载本地数据文件
+const seller = appData.seller//获取对应的本地数据
+const goods = appData.goods
+const ratings = appData.ratings
+var apiRoutes = express.Router()
+app.ues('/api',apiRoutes)//通过路由请求数据
+
+
+2.devServer{
+    before(app) {//请求数据
+        app.get('/api/seller',(req,res) => {
+            res.json({
+                errno: 0,
+                data: seller
+            })
+        }),
+        app.get('/api/goots',(req,res) => {
+            res.json({
+                errno: 0,
+                data: goods
+            })
+        }),
+        app.get('/api/ratings',(req,res) => {
+            res.json({
+                errno: 0,
+                data: ratings
+            })
+        })
+    }
+}
+
+3.重跑 npm run dev
+
+
+4.运用了stickyfooter布局
+
+5.选择评论显示
+needShow (type, text) {
+      if (this.onlyContent && !text) {
+        return false
+      }//是否选择显示全部
+      if (this.selectType === All) {
+        return true
+      } else {
+        return type === this.selectType
+      }//在全部还是推荐还是吐槽
+    }
+
+6.时间戳 过滤器
+filters: {
+    formatDate (time) {
+      let date = new Date(time)
+      return formatDate(date, 'yyyy-MM-dd hh:mm')
+      //传入时间戳 和 显示格式
+    }
+  }
+  引入date.js模块
+
+7.在父组件修改组件样式
+正常css：
+.father >>> .son
+
+sass预编译
+.father /deep/ .son
+
+8.this.$nextTick()
+在dom更新完后再操作，使用BScroll经常用到，使dom的数据加载完，再执行BScroll
+
+9.横向滚动
+this.$nextTick(function () {
+        this.picScroll = new BScroll(this.$refs.picWrapper, {
+          scrollX: true,
+          eventPassthrough: 'vertical'//横，竖向滚动不干扰
+        })
+      })
+
+10.store.js用于储存数据和读取数据
+savToLocal储存
+loadFromLocal读取
+可以读取任何数据
